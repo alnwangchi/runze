@@ -38,7 +38,7 @@ export function WorksSection() {
           {stories.map((story) => (
             <article key={story.id}>
               {story.imageUrl ? (
-                <div className="relative aspect-[16/10]">
+                <div className="relative mb-4 aspect-[16/10]">
                   <Image
                     src={story.imageUrl}
                     alt={story.alt || story.title}
@@ -47,11 +47,7 @@ export function WorksSection() {
                     className="object-cover"
                   />
                 </div>
-              ) : (
-                <div className="flex aspect-[16/10] items-center justify-center bg-line text-sm text-muted">
-                  圖片無法顯示
-                </div>
-              )}
+              ) : null}
               <p className="mt-4 text-sm tracking-wide text-bronze">{formatStoryDate(story.date)}</p>
               <h3 className="mt-2 font-serif text-2xl leading-snug">{story.title}</h3>
               <p className="mt-4 leading-8 whitespace-pre-line text-muted">{story.body}</p>
