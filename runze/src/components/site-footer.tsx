@@ -1,18 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { heroSlides } from "@/content/images";
+import { heroSlides, type LicensedImage } from "@/content/images";
 import { isFirebaseConfigured } from "@/lib/firebase";
 import { emptyProfile, getProfile, type SiteProfile } from "@/lib/profile";
+import { listPublishedStories } from "@/lib/stories";
+import { creditsForStories } from "@/components/works-section";
 
 export function SiteFooter() {
   const [profile, setProfile] = useState<SiteProfile>(emptyProfile);
+  const [credits, setCredits] = useState<LicensedImage[]>(heroSlides);
 
   useEffect(() => {
     if (!isFirebaseConfigured()) return;
     getProfile()
       .then(setProfile)
       .catch(() => setProfile(emptyProfile));
+    listPublishedStories()
+      .then((stories) => setCredits([...heroSlides, ...creditsForStories(stories)]))
+      .catch(() => setCredits(heroSlides));
   }, []);
 
   const rows = [
@@ -35,7 +41,7 @@ export function SiteFooter() {
         <div>
           <p className="text-xs tracking-[0.28em] text-paper/60">IMAGE CREDITS</p>
           <ul className="mt-4 space-y-2 text-sm text-paper/75">
-            {heroSlides.map((image) => (
+            {credits.map((image) => (
               <li key={image.src}>
                 {image.alt}／{image.credit}
               </li>
