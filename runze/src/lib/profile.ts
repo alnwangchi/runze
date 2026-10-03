@@ -1,4 +1,5 @@
 import { doc, getDoc, setDoc } from "firebase/firestore";
+import { defaultAboutBody, defaultAboutTitle } from "@/content/about";
 import { getFirebase, isFirebaseConfigured } from "@/lib/firebase";
 
 export type SiteProfile = {
@@ -17,6 +18,12 @@ export const emptyProfile: SiteProfile = {
   registration: "",
 };
 
+export const defaultProfile: SiteProfile = {
+  ...emptyProfile,
+  aboutTitle: defaultAboutTitle,
+  aboutBody: defaultAboutBody,
+};
+
 function profileDoc() {
   const client = getFirebase();
   if (!client) throw new Error("尚未設定 Firebase");
@@ -29,9 +36,9 @@ function readField(data: Record<string, unknown>, key: keyof SiteProfile) {
 }
 
 export async function getProfile(): Promise<SiteProfile> {
-  if (!isFirebaseConfigured()) return emptyProfile;
+  if (!isFirebaseConfigured()) return defaultProfile;
   const snapshot = await getDoc(profileDoc());
-  if (!snapshot.exists()) return emptyProfile;
+  if (!snapshot.exists()) return defaultProfile;
   const data = snapshot.data() as Record<string, unknown>;
   return {
     aboutTitle: readField(data, "aboutTitle"),

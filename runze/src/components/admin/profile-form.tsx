@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import { isFirebaseConfigured } from "@/lib/firebase";
-import { emptyProfile, getProfile, saveProfile, type SiteProfile } from "@/lib/profile";
+import { defaultProfile, getProfile, saveProfile, type SiteProfile } from "@/lib/profile";
 
 const fields: Array<{ key: keyof SiteProfile; label: string; multiline?: boolean }> = [
   { key: "aboutTitle", label: "關於標題" },
@@ -13,7 +13,7 @@ const fields: Array<{ key: keyof SiteProfile; label: string; multiline?: boolean
 ];
 
 export function ProfileForm() {
-  const [profile, setProfile] = useState<SiteProfile>(emptyProfile);
+  const [profile, setProfile] = useState<SiteProfile>(defaultProfile);
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
   const configured = isFirebaseConfigured();
@@ -40,37 +40,58 @@ export function ProfileForm() {
   }
 
   if (!configured) {
-    return <p className="text-sm text-muted">尚未設定 Firebase。請依 .env.example 建立 .env.local。</p>;
+    return (
+      <div className="max-w-2xl space-y-5">
+        <p className="text-sm text-muted">
+          尚未設定 Firebase。首頁目前顯示這份定稿。連線後可在此修改並儲存，之後以資料庫內容為準。
+        </p>
+        <AboutFields profile={profile} disabled onChange={setProfile} />
+      </div>
+    );
   }
 
   return (
     <form className="max-w-2xl space-y-5" onSubmit={onSubmit}>
-      {fields.map((field) => (
-        <label key={field.key} className="block text-sm">
-          {field.label}
-          {field.multiline ? (
-            <textarea
-              className="mt-2 min-h-48 w-full border border-line bg-paper px-3 py-2"
-              value={profile[field.key]}
-              onChange={(event) =>
-                setProfile((current) => ({ ...current, [field.key]: event.target.value }))
-              }
-            />
-          ) : (
-            <input
-              className="mt-2 w-full border border-line bg-paper px-3 py-2"
-              value={profile[field.key]}
-              onChange={(event) =>
-                setProfile((current) => ({ ...current, [field.key]: event.target.value }))
-              }
-            />
-          )}
-        </label>
-      ))}
+      <AboutFields profile={profile} onChange={setProfile} />
       <button type="submit" disabled={saving} className="bg-pine px-4 py-2 text-sm text-paper disabled:opacity-60">
         {saving ? "儲存中" : "儲存"}
       </button>
       {message ? <p className="text-sm text-muted">{message}</p> : null}
     </form>
+  );
+}
+
+function AboutFields({
+  profile,
+  disabled,
+  onChange,
+}: {
+  profile: SiteProfile;
+  disabled?: boolean;
+  onChange: (profile: SiteProfile) => void;
+}) {
+  return (
+    <>
+      {fields.map((field) => (
+        <label key={field.key} className="block text-sm">
+          {field.label}
+          {field.multiline ? (
+            <textarea
+              disabled={disabled}
+              className="mt-2 min-h-48 w-full border border-line bg-paper px-3 py-2 disabled:opacity-70"
+              value={profile[field.key]}
+              onChange={(event) => onChange({ ...profile, [field.key]: event.target.value })}
+            />
+          ) : (
+            <input
+              disabled={disabled}
+              className="mt-2 w-full border border-line bg-paper px-3 py-2 disabled:opacity-70"
+              value={profile[field.key]}
+              onChange={(event) => onChange({ ...profile, [field.key]: event.target.value })}
+            />
+          )}
+        </label>
+      ))}
+    </>
   );
 }

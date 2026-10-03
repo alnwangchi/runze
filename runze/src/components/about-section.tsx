@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { emptyProfile, getProfile, type SiteProfile } from "@/lib/profile";
+import { defaultAboutSlogan } from "@/content/about";
+import { defaultProfile, getProfile, type SiteProfile } from "@/lib/profile";
 import { isFirebaseConfigured } from "@/lib/firebase";
 
 export function AboutSection() {
   const configured = isFirebaseConfigured();
-  const [profile, setProfile] = useState<SiteProfile>(emptyProfile);
-  const [message, setMessage] = useState(configured ? "載入中" : "介紹尚未填寫。");
+  const [profile, setProfile] = useState<SiteProfile>(defaultProfile);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     if (!configured) return;
@@ -19,7 +20,7 @@ export function AboutSection() {
         setMessage(next.aboutBody.trim() ? "" : "介紹尚未填寫。");
       })
       .catch(() => {
-        if (!ignore) setMessage("介紹暫時無法讀取。");
+        if (!ignore) setProfile(defaultProfile);
       });
     return () => {
       ignore = true;
@@ -36,8 +37,20 @@ export function AboutSection() {
         {message ? (
           <p className="mt-8 text-lg leading-9 text-muted">{message}</p>
         ) : (
-          <div className="mt-8 space-y-6 text-lg leading-9 whitespace-pre-line">
-            {profile.aboutBody}
+          <div className="mt-8 space-y-6 text-lg leading-9">
+            {profile.aboutBody
+              .split(/\n{2,}/)
+              .map((paragraph) => paragraph.trim())
+              .filter(Boolean)
+              .map((paragraph) =>
+                paragraph === defaultAboutSlogan ? (
+                  <p key={paragraph} className="font-serif text-2xl leading-snug text-pine">
+                    {paragraph}
+                  </p>
+                ) : (
+                  <p key={paragraph}>{paragraph}</p>
+                ),
+              )}
           </div>
         )}
       </div>
