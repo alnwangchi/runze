@@ -32,3 +32,33 @@ function exportJpeg(canvas: HTMLCanvasElement, quality: number) {
     );
   });
 }
+
+type WorkerResponse = { ok: true; blob: Blob } | { ok: false; message: string };
+
+export function startImagePreparation(file: File) {
+  if (typeof Worker === "undefined" || typeof OffscreenCanvas === "undefined") {
+    return resizeImage(file);
+  }
+
+  return new Promise<Blob>((resolve, reject) => {
+    let worker: Worker;
+    try {
+      worker = new Worker(new URL("./compress-image.worker.ts", import.meta.url));
+    } catch {
+      resizeImage(file).then(resolve, reject);
+      return;
+    }
+
+    const finish = () => worker.terminate();
+    worker.onmessage = (event: MessageEvent<WorkerResponse>) => {
+      finish();
+      if (event.data.ok) resolve(event.data.blob);
+      else reject(new Error(event.data.message));
+    };
+    worker.onerror = () => {
+      finish();
+      resizeImage(file).then(resolve, reject);
+    };
+    worker.postMessage({ file });
+  });
+}
