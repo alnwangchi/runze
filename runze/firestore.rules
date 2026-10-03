@@ -1,0 +1,14 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Local development only. The admin screen checks a password in the browser,
+    // so these rules cannot tell an editor from anyone else.
+    // Replace this with Firebase Auth checks before the site is reachable publicly.
+    match /site/{docId} {
+      allow read, write: if true;
+    }
+    match /stories/{storyId} {
+      allow read, write: if true;
+    }
+  }
+}
