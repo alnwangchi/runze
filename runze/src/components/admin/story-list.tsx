@@ -37,9 +37,9 @@ export function StoryList() {
         新增成果
       </Link>
       {message ? <p className="mt-4 text-sm text-bronze">{message}</p> : null}
-      <ul className="mt-8 divide-y divide-line border-y border-line">
+      <ul className="mt-8 divide-y divide-line overflow-hidden rounded-md border border-line">
         {stories.map((story) => (
-          <li key={story.id} className="flex flex-wrap items-center justify-between gap-4 py-4">
+          <li key={story.id} className="flex flex-wrap items-center justify-between gap-4 px-4 py-4">
             <div>
               <p className="font-serif text-xl">{story.title}</p>
               <p className="mt-1 text-sm text-muted">

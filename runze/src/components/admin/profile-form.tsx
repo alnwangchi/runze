@@ -78,14 +78,14 @@ function AboutFields({
           {field.multiline ? (
             <textarea
               disabled={disabled}
-              className="mt-2 min-h-48 w-full border border-line bg-paper px-3 py-2 disabled:opacity-70"
+              className="mt-2 min-h-48 w-full rounded-md border border-line bg-paper px-3 py-2 disabled:opacity-70"
               value={profile[field.key]}
               onChange={(event) => onChange({ ...profile, [field.key]: event.target.value })}
             />
           ) : (
             <input
               disabled={disabled}
-              className="mt-2 w-full border border-line bg-paper px-3 py-2 disabled:opacity-70"
+              className="mt-2 w-full rounded-md border border-line bg-paper px-3 py-2 disabled:opacity-70"
               value={profile[field.key]}
               onChange={(event) => onChange({ ...profile, [field.key]: event.target.value })}
             />

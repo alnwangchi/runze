@@ -42,7 +42,7 @@ export function AdminGate({ children }: { children: ReactNode }) {
           <label className="block text-sm">
             帳號
             <input
-              className="mt-2 w-full border border-line bg-paper px-3 py-2"
+              className="mt-2 w-full rounded-md border border-line bg-paper px-3 py-2"
               autoComplete="username"
               value={username}
               onChange={(event) => setUsername(event.target.value)}
@@ -52,7 +52,7 @@ export function AdminGate({ children }: { children: ReactNode }) {
             密碼
             <input
               type="password"
-              className="mt-2 w-full border border-line bg-paper px-3 py-2"
+              className="mt-2 w-full rounded-md border border-line bg-paper px-3 py-2"
               autoComplete="current-password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}

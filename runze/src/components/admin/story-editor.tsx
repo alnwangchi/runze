@@ -154,26 +154,26 @@ export function StoryEditor({ storyId }: EditorProps) {
     <form className="max-w-2xl space-y-5" onSubmit={onSubmit}>
       <label className="block text-sm">
         標題
-        <input className="mt-2 w-full border border-line bg-paper px-3 py-2" value={title} onChange={(event) => setTitle(event.target.value)} />
+        <input className="mt-2 w-full rounded-md border border-line bg-paper px-3 py-2" value={title} onChange={(event) => setTitle(event.target.value)} />
       </label>
       <label className="block text-sm">
         日期
-        <input type="date" className="mt-2 border border-line bg-paper px-3 py-2" value={date} onChange={(event) => setDate(event.target.value)} />
+        <input type="date" className="mt-2 rounded-md border border-line bg-paper px-3 py-2" value={date} onChange={(event) => setDate(event.target.value)} />
       </label>
       <label className="block text-sm">
         內文
-        <textarea className="mt-2 min-h-40 w-full border border-line bg-paper px-3 py-2" value={body} onChange={(event) => setBody(event.target.value)} />
+        <textarea className="mt-2 min-h-40 w-full rounded-md border border-line bg-paper px-3 py-2" value={body} onChange={(event) => setBody(event.target.value)} />
       </label>
       {isNew ? null : (
         <>
       <label className="block text-sm">
         替代文字
-        <input className="mt-2 w-full border border-line bg-paper px-3 py-2" value={alt} onChange={(event) => setAlt(event.target.value)} />
+        <input className="mt-2 w-full rounded-md border border-line bg-paper px-3 py-2" value={alt} onChange={(event) => setAlt(event.target.value)} />
       </label>
       <label className="block text-sm">
         狀態
         <select
-          className="mt-2 border border-line bg-paper px-3 py-2"
+          className="mt-2 rounded-md border border-line bg-paper px-3 py-2"
           value={status}
           onChange={(event) => setStatus(event.target.value as StoryStatus)}
         >
@@ -201,7 +201,7 @@ export function StoryEditor({ storyId }: EditorProps) {
             <button
               key={image.src}
               type="button"
-              className={`overflow-hidden border ${placeholder === image.src ? "border-pine" : "border-line"}`}
+              className={`overflow-hidden rounded-md border ${placeholder === image.src ? "border-pine" : "border-line"}`}
               onClick={() => {
                 setPlaceholder(image.src);
                 setAlt(image.alt);
