@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import {
   ADMIN_PASSWORD,
@@ -17,8 +18,11 @@ export function AdminGate({ children }: { children: ReactNode }) {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    setAuthed(isAdminSession());
-    setReady(true);
+    const timer = window.setTimeout(() => {
+      setAuthed(isAdminSession());
+      setReady(true);
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, []);
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -78,11 +82,11 @@ export function AdminGate({ children }: { children: ReactNode }) {
     <div className="min-h-svh">
       <div className="border-b border-line bg-paper">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-4 text-sm">
-          <a href="/admin" className="font-serif text-lg">
+          <Link href="/admin" className="font-serif text-lg">
             潤澤後台
-          </a>
+          </Link>
           <div className="flex gap-4">
-            <a href="/">回網站</a>
+            <Link href="/">回網站</Link>
             <button
               type="button"
               onClick={() => {

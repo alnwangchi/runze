@@ -5,21 +5,26 @@ import { emptyProfile, getProfile, type SiteProfile } from "@/lib/profile";
 import { isFirebaseConfigured } from "@/lib/firebase";
 
 export function AboutSection() {
+  const configured = isFirebaseConfigured();
   const [profile, setProfile] = useState<SiteProfile>(emptyProfile);
-  const [message, setMessage] = useState("載入中");
+  const [message, setMessage] = useState(configured ? "載入中" : "介紹尚未填寫。");
 
   useEffect(() => {
-    if (!isFirebaseConfigured()) {
-      setMessage("介紹尚未填寫。");
-      return;
-    }
+    if (!configured) return;
+    let ignore = false;
     getProfile()
       .then((next) => {
+        if (ignore) return;
         setProfile(next);
         setMessage(next.aboutBody.trim() ? "" : "介紹尚未填寫。");
       })
-      .catch(() => setMessage("介紹暫時無法讀取。"));
-  }, []);
+      .catch(() => {
+        if (!ignore) setMessage("介紹暫時無法讀取。");
+      });
+    return () => {
+      ignore = true;
+    };
+  }, [configured]);
 
   const title = profile.aboutTitle.trim() || "關於潤澤";
 
