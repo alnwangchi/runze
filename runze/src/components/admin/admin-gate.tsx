@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState, useSyncExternalStore, type FormEvent, type ReactNode } from "react";
 import {
   ADMIN_PASSWORD,
@@ -13,6 +14,7 @@ import {
 
 export function AdminGate({ children }: { children: ReactNode }) {
   const authed = useSyncExternalStore(subscribeAdminSession, isAdminSession, () => false);
+  const pathname = usePathname();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -69,9 +71,14 @@ export function AdminGate({ children }: { children: ReactNode }) {
     <div className="min-h-svh">
       <div className="border-b border-line bg-paper">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-4 text-sm">
-          <Link href="/admin" className="font-serif text-lg">
-            潤澤後台
-          </Link>
+          <div className="flex items-center gap-4">
+            {pathname !== "/admin" ? (
+              <Link href={pathname.startsWith("/admin/stories/") ? "/admin/stories" : "/admin"}>返回</Link>
+            ) : null}
+            <Link href="/admin" className="font-serif text-lg">
+              潤澤後台
+            </Link>
+          </div>
           <div className="flex gap-4">
             <Link href="/">回網站</Link>
             <button
