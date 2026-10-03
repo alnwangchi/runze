@@ -1,23 +1,41 @@
-import { heroSlides, placeholderImages } from "@/content/images";
+"use client";
+
+import { useEffect, useState } from "react";
+import { heroSlides } from "@/content/images";
+import { isFirebaseConfigured } from "@/lib/firebase";
+import { emptyProfile, getProfile, type SiteProfile } from "@/lib/profile";
 
 export function SiteFooter() {
-  const credits = [...heroSlides, ...placeholderImages];
+  const [profile, setProfile] = useState<SiteProfile>(emptyProfile);
+
+  useEffect(() => {
+    if (!isFirebaseConfigured()) return;
+    getProfile()
+      .then(setProfile)
+      .catch(() => setProfile(emptyProfile));
+  }, []);
+
+  const rows = [
+    profile.address.trim() || "地址尚未填寫",
+    profile.phone.trim() || "電話尚未填寫",
+    profile.registration.trim() || "登記字號尚未填寫",
+  ];
 
   return (
     <footer id="footer" className="scroll-mt-24 bg-pine-deep px-6 py-16 text-paper">
       <div className="mx-auto grid max-w-6xl gap-10 md:grid-cols-[1.4fr_1fr]">
         <div>
           <p className="font-serif text-2xl">財團法人潤澤文化基金會</p>
-          <dl className="mt-6 space-y-2 text-sm text-paper/80">
-            <div>地址尚未填寫</div>
-            <div>電話尚未填寫</div>
-            <div>登記字號尚未填寫</div>
-          </dl>
+          <ul className="mt-6 space-y-2 text-sm text-paper/80">
+            {rows.map((row) => (
+              <li key={row}>{row}</li>
+            ))}
+          </ul>
         </div>
         <div>
           <p className="text-xs tracking-[0.28em] text-paper/60">IMAGE CREDITS</p>
           <ul className="mt-4 space-y-2 text-sm text-paper/75">
-            {credits.map((image) => (
+            {heroSlides.map((image) => (
               <li key={image.src}>
                 {image.alt}／{image.credit}
               </li>
