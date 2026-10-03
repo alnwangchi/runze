@@ -1,44 +1,31 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState, type FormEvent, type ReactNode } from "react";
+import { useState, useSyncExternalStore, type FormEvent, type ReactNode } from "react";
 import {
   ADMIN_PASSWORD,
   ADMIN_USERNAME,
   endAdminSession,
   isAdminSession,
   startAdminSession,
+  subscribeAdminSession,
 } from "@/lib/admin-session";
 
 export function AdminGate({ children }: { children: ReactNode }) {
-  const [ready, setReady] = useState(false);
-  const [authed, setAuthed] = useState(false);
+  const authed = useSyncExternalStore(subscribeAdminSession, isAdminSession, () => false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => {
-      setAuthed(isAdminSession());
-      setReady(true);
-    }, 0);
-    return () => window.clearTimeout(timer);
-  }, []);
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
       startAdminSession();
-      setAuthed(true);
       setError("");
       setPassword("");
       return;
     }
     setError("帳號或密碼不正確");
-  }
-
-  if (!ready) {
-    return <p className="px-6 py-16 text-muted">載入中</p>;
   }
 
   if (!authed) {
@@ -91,7 +78,6 @@ export function AdminGate({ children }: { children: ReactNode }) {
               type="button"
               onClick={() => {
                 endAdminSession();
-                setAuthed(false);
               }}
             >
               登出
