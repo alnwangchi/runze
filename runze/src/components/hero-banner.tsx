@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { heroSlides } from "@/content/images";
 
@@ -32,10 +33,13 @@ export function HeroBanner() {
 
   return (
     <section id="top" className="relative min-h-svh bg-pine-deep">
-      <img
+      <Image
         src={slide.src}
         alt={slide.alt}
-        className="absolute inset-0 h-full w-full object-cover"
+        fill
+        priority={index === 0}
+        sizes="100vw"
+        className="object-cover"
       />
       <div className="absolute inset-0 bg-pine-deep/45" />
       <div className="relative flex min-h-svh flex-col justify-end px-6 pb-20 pt-28 md:px-12">
