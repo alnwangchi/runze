@@ -34,3 +34,26 @@ body {
   background: #d7c4a4;
   color: var(--pine-deep);
 }
+
+a[href],
+button:not(:disabled),
+select,
+summary,
+label,
+[role="button"],
+[role="tab"],
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+input[type="checkbox"],
+input[type="radio"],
+input[type="file"] {
+  cursor: pointer;
+}
+
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+  cursor: not-allowed;
+}
