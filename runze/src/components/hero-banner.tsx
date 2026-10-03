@@ -6,7 +6,6 @@ import { heroSlides } from "@/content/images";
 
 export function HeroBanner() {
   const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
   const slide = heroSlides[index];
 
@@ -19,17 +18,12 @@ export function HeroBanner() {
   }, []);
 
   useEffect(() => {
-    if (paused || reduceMotion) return;
+    if (reduceMotion) return;
     const timer = window.setInterval(() => {
       setIndex((current) => (current + 1) % heroSlides.length);
     }, 6000);
     return () => window.clearInterval(timer);
-  }, [paused, reduceMotion]);
-
-  function go(next: number) {
-    const total = heroSlides.length;
-    setIndex((next + total) % total);
-  }
+  }, [reduceMotion]);
 
   return (
     <section id="top" className="relative min-h-svh bg-pine-deep">
@@ -49,25 +43,7 @@ export function HeroBanner() {
             財團法人潤澤文化基金會
           </h1>
         </div>
-        <div className="mt-8 flex items-center gap-3 text-sm text-paper">
-          <button type="button" className="border border-white/40 px-3 py-2" onClick={() => go(index - 1)}>
-            上一張
-          </button>
-          <button type="button" className="border border-white/40 px-3 py-2" onClick={() => go(index + 1)}>
-            下一張
-          </button>
-          {reduceMotion ? (
-            <span className="text-paper/70">已配合減少動態</span>
-          ) : (
-            <button
-              type="button"
-              className="border border-white/40 px-3 py-2"
-              onClick={() => setPaused((value) => !value)}
-            >
-              {paused ? "播放" : "暫停"}
-            </button>
-          )}
-          <div className="ml-2 flex gap-2" role="tablist" aria-label="輪播圖">
+        <div className="mt-8 flex items-center gap-2" role="tablist" aria-label="輪播圖">
             {heroSlides.map((item, itemIndex) => (
               <button
                 key={item.src}
@@ -79,7 +55,6 @@ export function HeroBanner() {
                 onClick={() => setIndex(itemIndex)}
               />
             ))}
-          </div>
         </div>
       </div>
     </section>
